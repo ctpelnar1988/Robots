@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 from time import sleep
 import pygame
+import os
 
 pygame.init()
 pygame.joystick.init()
@@ -12,50 +13,51 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 ### SENSORS
-GPIO_TRIGGER = 14
+#GPIO_TRIGGER = 14
 
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
+#GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 
 ECHOS = {"ECHO_LEFT": 15, "ECHO_MIDDLE": 18, "ECHO_RIGHT": 23}
 for e in ECHOS:
-  GPIO.setup(ECHOS[e], GPIO.IN)
+  print("Listening...")
+  #GPIO.setup(ECHOS[e], GPIO.IN)
 
 ### MOTORS
 
 ## FRONT RIGHT
-Motor_FrontR_1 = 6
-Motor_FrontR_2 = 13
-Motor_FrontR_Enable = 5
+Motor_FrontR_1 = 7
+Motor_FrontR_2 = 12
+Motor_FrontR_Enable = 8
 
 GPIO.setup(Motor_FrontR_1, GPIO.OUT)
 GPIO.setup(Motor_FrontR_2, GPIO.OUT)
 GPIO.setup(Motor_FrontR_Enable, GPIO.OUT)
 
 ## BACK RIGHT
-Motor_BackR_3 = 26
-Motor_BackR_4 = 21
-Motor_BackR_Enable = 19
+Motor_BackR_3 = 21
+Motor_BackR_4 = 20
+Motor_BackR_Enable = 16
 
 GPIO.setup(Motor_BackR_3, GPIO.OUT)
 GPIO.setup(Motor_BackR_4, GPIO.OUT)
 GPIO.setup(Motor_BackR_Enable, GPIO.OUT)
 
 ## FRONT LEFT
-Motor_FrontL_1 = 24
-Motor_FrontL_2 = 22
-Motor_FrontL_Enable = 25
+Motor_FrontL_3 = 18
+Motor_FrontL_4 = 15
+Motor_FrontL_Enable = 14
 
-GPIO.setup(Motor_FrontL_1, GPIO.OUT)
-GPIO.setup(Motor_FrontL_2, GPIO.OUT)
+GPIO.setup(Motor_FrontL_3, GPIO.OUT)
+GPIO.setup(Motor_FrontL_4, GPIO.OUT)
 GPIO.setup(Motor_FrontL_Enable, GPIO.OUT)
 
 ## BACK LEFT
-Motor_BackL_3 = 16
-Motor_BackL_4 = 12
-Motor_BackL_Enable = 20
+Motor_BackL_1 = 24
+Motor_BackL_2 = 25
+Motor_BackL_Enable = 23
 
-GPIO.setup(Motor_BackL_3, GPIO.OUT)
-GPIO.setup(Motor_BackL_4, GPIO.OUT)
+GPIO.setup(Motor_BackL_1, GPIO.OUT)
+GPIO.setup(Motor_BackL_2, GPIO.OUT)
 GPIO.setup(Motor_BackL_Enable, GPIO.OUT)
 
 def distance(e):
@@ -89,18 +91,18 @@ def backward():
   GPIO.output(Motor_FrontR_Enable, GPIO.HIGH)
 
   # Back Right Motors
-  GPIO.output(Motor_BackR_3, GPIO.LOW)
-  GPIO.output(Motor_BackR_4, GPIO.HIGH)
+  GPIO.output(Motor_BackR_3, GPIO.HIGH)
+  GPIO.output(Motor_BackR_4, GPIO.LOW)
   GPIO.output(Motor_BackR_Enable, GPIO.HIGH)
 
   # Front Left Motors
-  GPIO.output(Motor_FrontL_1, GPIO.HIGH)
-  GPIO.output(Motor_FrontL_2, GPIO.LOW)
+  GPIO.output(Motor_FrontL_3, GPIO.LOW)
+  GPIO.output(Motor_FrontL_4, GPIO.HIGH)
   GPIO.output(Motor_FrontL_Enable, GPIO.HIGH)
 
   # Back Left Motors
-  GPIO.output(Motor_BackL_3, GPIO.LOW)
-  GPIO.output(Motor_BackL_4, GPIO.HIGH)
+  GPIO.output(Motor_BackL_1, GPIO.LOW)
+  GPIO.output(Motor_BackL_2, GPIO.HIGH)
   GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
 
 
@@ -111,18 +113,18 @@ def forward():
   GPIO.output(Motor_FrontR_Enable, GPIO.HIGH)
 
   # Back Right Motors
-  GPIO.output(Motor_BackR_3, GPIO.HIGH)
-  GPIO.output(Motor_BackR_4, GPIO.LOW)
+  GPIO.output(Motor_BackR_3, GPIO.LOW)
+  GPIO.output(Motor_BackR_4, GPIO.HIGH)
   GPIO.output(Motor_BackR_Enable, GPIO.HIGH)
 
   # Front Left Motors
-  GPIO.output(Motor_FrontL_1, GPIO.LOW)
-  GPIO.output(Motor_FrontL_2, GPIO.HIGH)
+  GPIO.output(Motor_FrontL_3, GPIO.HIGH)
+  GPIO.output(Motor_FrontL_4, GPIO.LOW)
   GPIO.output(Motor_FrontL_Enable, GPIO.HIGH)
 
   # Back Left Motors
-  GPIO.output(Motor_BackL_3, GPIO.HIGH)
-  GPIO.output(Motor_BackL_4, GPIO.LOW)
+  GPIO.output(Motor_BackL_1, GPIO.HIGH)
+  GPIO.output(Motor_BackL_2, GPIO.LOW)
   GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
 
 def right():
@@ -132,18 +134,18 @@ def right():
   GPIO.output(Motor_FrontR_Enable, GPIO.HIGH)
 
   # Back Right Motors
-  GPIO.output(Motor_BackR_3, GPIO.LOW)
-  GPIO.output(Motor_BackR_4, GPIO.HIGH)
+  GPIO.output(Motor_BackR_3, GPIO.HIGH)
+  GPIO.output(Motor_BackR_4, GPIO.LOW)
   GPIO.output(Motor_BackR_Enable, GPIO.HIGH)
 
   # Front Left Motors
-  GPIO.output(Motor_FrontL_1, GPIO.LOW)
-  GPIO.output(Motor_FrontL_2, GPIO.HIGH)
+  GPIO.output(Motor_FrontL_3, GPIO.HIGH)
+  GPIO.output(Motor_FrontL_4, GPIO.LOW)
   GPIO.output(Motor_FrontL_Enable, GPIO.HIGH)
 
   # Back Left Motors
-  GPIO.output(Motor_BackL_3, GPIO.HIGH)
-  GPIO.output(Motor_BackL_4, GPIO.LOW)
+  GPIO.output(Motor_BackL_1, GPIO.HIGH)
+  GPIO.output(Motor_BackL_2, GPIO.LOW)
   GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
 
 def left():
@@ -153,18 +155,18 @@ def left():
   GPIO.output(Motor_FrontR_Enable, GPIO.HIGH)
 
   # Back Right Motors
-  GPIO.output(Motor_BackR_3, GPIO.HIGH)
-  GPIO.output(Motor_BackR_4, GPIO.LOW)
+  GPIO.output(Motor_BackR_3, GPIO.LOW)
+  GPIO.output(Motor_BackR_4, GPIO.HIGH)
   GPIO.output(Motor_BackR_Enable, GPIO.HIGH)
 
   # Front Left Motors
-  GPIO.output(Motor_FrontL_1, GPIO.HIGH)
-  GPIO.output(Motor_FrontL_2, GPIO.LOW)
+  GPIO.output(Motor_FrontL_3, GPIO.LOW)
+  GPIO.output(Motor_FrontL_4, GPIO.HIGH)
   GPIO.output(Motor_FrontL_Enable, GPIO.HIGH)
 
   # Back Left Motors
-  GPIO.output(Motor_BackL_3, GPIO.LOW)
-  GPIO.output(Motor_BackL_4, GPIO.HIGH)
+  GPIO.output(Motor_BackL_1, GPIO.LOW)
+  GPIO.output(Motor_BackL_2, GPIO.HIGH)
   GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
 
 def stop():
