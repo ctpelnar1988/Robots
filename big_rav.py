@@ -21,7 +21,7 @@ else:
 
 ### MOTORS
 FREQUENCY = 20
-DUTY_CYCLE = 75
+DUTY_CYCLE = 90
 PWM_STOP = 0
 
 ## FRONT RIGHT
@@ -302,21 +302,21 @@ if __name__ == '__main__':
                     if event.type == pygame.JOYBUTTONDOWN:
                         if j.get_button(3):
                             print("Moving Forward")
-                            forward()
+                            pwm_forward()
                         elif j.get_button(1):
                             print("Moving Backward")
-                            backward()
+                            pwm_backward()
                         elif j.get_button(2):
                             print("Moving Right")
-                            right()
+                            pwm_right()
                         elif j.get_button(0):
                             print("Moving Left")
-                            left()
+                            pwm_left()
                     elif event.type == pygame.JOYBUTTONUP:
-                        stop()
+                        pwm_stop()
                         print("Listening...")
     except KeyboardInterrupt:
         print("Shutting Down and Cleaning Up")
-        stop()
+        pwm_stop()
         GPIO.cleanup()
 
