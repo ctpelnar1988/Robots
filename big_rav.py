@@ -4,11 +4,6 @@ from time import sleep
 import pygame
 import serial
 
-pygame.init()
-pygame.joystick.init()
-j = pygame.joystick.Joystick(0)
-j.init()
-
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
@@ -21,7 +16,7 @@ else:
 
 ### MOTORS
 FREQUENCY = 20
-DUTY_CYCLE = 90
+DUTY_CYCLE = 80
 PWM_STOP = 0
 
 ## FRONT RIGHT
@@ -178,7 +173,7 @@ def stop():
     GPIO.output(Motor_BackR_Enable, GPIO.LOW)
     GPIO.output(Motor_FrontL_Enable, GPIO.LOW)
     GPIO.output(Motor_BackL_Enable, GPIO.LOW)
-    
+
 # PWM Control:
 
 def pwm_stop():
@@ -190,7 +185,7 @@ def pwm_stop():
     pwmMotor_FrontL_4.ChangeDutyCycle(PWM_STOP)
     pwmMotor_BackL_1.ChangeDutyCycle(PWM_STOP)
     pwmMotor_BackL_2.ChangeDutyCycle(PWM_STOP)
-    
+
 def pwm_forward():
     # Front Right Motors
     pwmMotor_FrontR_1.ChangeDutyCycle(PWM_STOP)
@@ -211,7 +206,7 @@ def pwm_forward():
     pwmMotor_BackL_1.ChangeDutyCycle(DUTY_CYCLE)
     pwmMotor_BackL_2.ChangeDutyCycle(PWM_STOP)
     GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
-    
+
 def pwm_backward():
     # Front Right Motors
     pwmMotor_FrontR_1.ChangeDutyCycle(DUTY_CYCLE)
@@ -232,7 +227,7 @@ def pwm_backward():
     pwmMotor_BackL_1.ChangeDutyCycle(PWM_STOP)
     pwmMotor_BackL_2.ChangeDutyCycle(DUTY_CYCLE)
     GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
-    
+
 def pwm_right():
     # Front Left Motors
     pwmMotor_FrontL_3.ChangeDutyCycle(DUTY_CYCLE)
@@ -243,7 +238,7 @@ def pwm_right():
     pwmMotor_BackL_1.ChangeDutyCycle(DUTY_CYCLE)
     pwmMotor_BackL_2.ChangeDutyCycle(PWM_STOP)
     GPIO.output(Motor_BackL_Enable, GPIO.HIGH)
-    
+
 def pwm_left():
     # Front Right Motors
     pwmMotor_FrontR_1.ChangeDutyCycle(PWM_STOP)
@@ -254,7 +249,7 @@ def pwm_left():
     pwmMotor_BackR_3.ChangeDutyCycle(PWM_STOP)
     pwmMotor_BackR_4.ChangeDutyCycle(DUTY_CYCLE)
     GPIO.output(Motor_BackR_Enable, GPIO.HIGH)
-    
+
 def drive_autonomously():
     ser = serial.Serial('/dev/ttyACM0', 9600)
     s = ser.readline()
@@ -266,10 +261,10 @@ def drive_autonomously():
         pwm_stop()
         time.sleep(2)
         pwm_right()
-        time.sleep(1)
+        time.sleep(1.25)
         print("RIGHT!")
         pwm_stop()
-        #time.sleep(2)
+        time.sleep(2)
     elif b'3\r\n' == s:
         pwm_stop()
         time.sleep(2)
@@ -282,7 +277,7 @@ def drive_autonomously():
         pwm_stop()
         time.sleep(2)
         pwm_left()
-        time.sleep(1)
+        time.sleep(1.25)
         print("LEFT!")
         pwm_stop()
         time.sleep(2)
@@ -296,6 +291,10 @@ if __name__ == '__main__':
                 drive_autonomously()
                 #print("AUTONOMOUS_MODE")
             else:
+                pygame.init()
+                pygame.joystick.init()
+                j = pygame.joystick.Joystick(0)
+                j.init()
                 #print("DRIVER_MODE")
                 events = pygame.event.get()
                 for event in events:
